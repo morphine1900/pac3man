@@ -90,23 +90,54 @@ def depthFirstSearch(problem):
     actions = []
     visited = set()
     dfsHelper(problem, problem.getStartState(), actions, visited)
-    actions.reverse()
     return actions
 
 def dfsHelper(problem, state, actions, visited):
     visited.add(state)
     if problem.isGoalState(state):
         return True
-    for successor in problem.getSuccessors(state):
-        if not successor[0] in visited and dfsHelper(problem, successor[0], actions, visited):
-            actions.append(successor[1])
+    for s, a, c in problem.getSuccessors(state):
+        if not s in visited and dfsHelper(problem, s, actions, visited):
+            actions.insert(0, a)
             return True
     return False
+
+def depthFirstSearch2(problem):
+    visited = set()
+    q = util.Stack()
+    q.push(problem.getStartState())
+    actions = util.Stack()
+    actions.push([])
+    while not q.isEmpty():
+        state = q.pop()
+        visited.add(state)
+        action = actions.pop()
+        if problem.isGoalState(state):
+            return action
+        for s, a, c in problem.getSuccessors(state):
+            if not s in visited:
+                q.push(s)
+                actions.push(action + [a])
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    q = util.Queue()
+    q.push(problem.getStartState())
+    actions = util.Queue()
+    actions.push([])
+    visited = set()
+    while not q.isEmpty():
+        state = q.pop()
+        visited.add(state)
+        action = actions.pop()
+        if problem.isGoalState(state):
+            return action
+        for s, a, c in problem.getSuccessors(state):
+            if not s in visited:
+                visited.add(s)
+                q.push(s)
+                actions.push(action + [a])
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
